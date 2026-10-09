@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
@@ -104,7 +104,7 @@
       }
 
       .botao:hover {
-        background: #00166067;
+        background: ##001660c4;
         transform: scale(1.05);
       }
 
@@ -176,7 +176,6 @@
       <div id="lista" class="lista"></div>
 
       <div class="rodape">💝 Obrigado por fazer parte desse momento!</div>
-      <button onclick="zerarLista()" class="botao-reset">🔄 Zerar lista</button>
     </div>
 
     <script>
@@ -324,57 +323,50 @@
         },
         {
           id: 21,
+          nome: "Torradeira",
+          descricao: "Torradeira elétrica",
+          icone: "🍞",
+          categoria: "Cozinha",
+        },
+        {
+          id: 22,
           nome: "Pipoqueira",
           descricao: "Pipoqueira para preparar pipoca",
           icone: "🍿",
           categoria: "Cozinha",
         },
         {
-          id: 22,
+          id: 23,
           nome: "Porta-temperos",
           descricao: "Organizador para temperos",
           icone: "🧂",
           categoria: "Cozinha",
         },
-        {
-          id: 23,
-          nome: "Tigelas / bowls",
-          descricao: "Conjunto de tigelas para servir e preparar alimentos",
-          icone: "🥣",
-          categoria: "Cozinha",
-        },
-        {
-          id: 24,
-          nome: "Ventilador",
-          descricao: "Ventilador para refrescar o ambiente",
-          icone: "🌀",
-          categoria: "Cozinha",
-        },
 
         // BANHEIRO
         {
-          id: 25,
+          id: 24,
           nome: "Toalhas de rosto",
           descricao: "Jogo de toalhas de rosto",
           icone: "🧖",
           categoria: "Banheiro",
         },
         {
-          id: 26,
+          id: 25,
           nome: "Toalhas de banho",
           descricao: "Jogo de toalhas de banho",
           icone: "🛁",
           categoria: "Banheiro",
         },
         {
-          id: 27,
+          id: 26,
           nome: "Escova sanitária com suporte",
           descricao: "Escova para limpeza do vaso sanitário",
           icone: "🧹",
           categoria: "Banheiro",
         },
         {
-          id: 28,
+          id: 27,
           nome: "Lixeira",
           descricao: "Lixeira para banheiro",
           icone: "🗑️",
@@ -383,35 +375,35 @@
 
         // LAVANDERIA
         {
-          id: 29,
+          id: 28,
           nome: "Varal de chão",
           descricao: "Varal dobrável para roupas",
           icone: "👕",
           categoria: "Lavanderia",
         },
         {
-          id: 30,
+          id: 29,
           nome: "Pregadores de roupa",
           descricao: "Kit de pregadores para roupas",
           icone: "🧺",
           categoria: "Lavanderia",
         },
         {
-          id: 31,
+          id: 30,
           nome: "Ferro de passar",
           descricao: "Ferro elétrico para passar roupas",
           icone: "👔",
           categoria: "Lavanderia",
         },
         {
-          id: 32,
+          id: 31,
           nome: "Tábua de passar",
           descricao: "Tábua para passar roupas",
           icone: "🧺",
           categoria: "Lavanderia",
         },
         {
-          id: 33,
+          id: 32,
           nome: "Mop",
           descricao: "Mop para limpeza de pisos",
           icone: "🧹",
@@ -420,35 +412,35 @@
 
         // QUARTO
         {
-          id: 34,
+          id: 33,
           nome: "Cortinas",
           descricao: "Cortinas para o quarto",
           icone: "🪟",
           categoria: "Quarto",
         },
         {
-          id: 35,
+          id: 34,
           nome: "Mantas",
           descricao: "Mantas para cama ou sofá",
           icone: "🛋️",
           categoria: "Quarto",
         },
         {
-          id: 36,
+          id: 35,
           nome: "Luminária de cabeceira",
           descricao: "Luminária para mesa de cabeceira",
           icone: "💡",
           categoria: "Quarto",
         },
         {
-          id: 37,
+          id: 36,
           nome: "Jogo de cama",
           descricao: "Conjunto de lençóis e fronhas",
           icone: "🛏️",
           categoria: "Quarto",
         },
         {
-          id: 38,
+          id: 37,
           nome: "Edredom",
           descricao: "Edredom para cama",
           icone: "🛌",
@@ -526,17 +518,6 @@
       }
 
       mostrarItens();
-      function zerarLista() {
-        if (!confirm("Tem certeza que deseja zerar todos os itens?")) {
-          return;
-        }
-
-        escolhidos = [];
-
-        localStorage.removeItem("chaPanela");
-
-        mostrarItens();
-      }
     </script>
   </body>
 </html>

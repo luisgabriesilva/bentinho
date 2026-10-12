@@ -178,6 +178,8 @@
       <div class="rodape">💝 Obrigado por fazer parte desse momento!</div>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
     <script>
       const itens = [
         // COZINHA
@@ -448,73 +450,102 @@
         },
       ];
 
-      let escolhidos = JSON.parse(localStorage.getItem("chaPanela")) || [];
+      // Configuração do aplicativo Firebase do site.
+      const firebaseConfig = {
+        apiKey: "AIzaSyCmpsi6o-eGYq35Y_Q6G0nWPD1ioDAS93M",
+        authDomain: "cha-de-panela-b7588.firebaseapp.com",
+        databaseURL: "https://cha-de-panela-b7588-default-rtdb.firebaseio.com",
+        projectId: "cha-de-panela-b7588",
+        storageBucket: "cha-de-panela-b7588.firebasestorage.app",
+        messagingSenderId: "474301287617",
+        appId: "1:474301287617:web:3ec602e31dc44df6ae5840",
+        measurementId: "G-B082GWVG0P",
+      };
+
+      let escolhidos = [];
+      let bancoPronto = false;
 
       function mostrarItens() {
         const lista = document.getElementById("lista");
-
         lista.innerHTML = "";
 
         itens.forEach((item) => {
           const escolhido = escolhidos.includes(item.id);
-
           const elemento = document.createElement("div");
-
           elemento.className = "item";
-
-          if (escolhido) {
-            elemento.classList.add("escolhido");
-          }
+          if (escolhido) elemento.classList.add("escolhido");
 
           elemento.innerHTML = `
-
-                    <div class="informacoes">
-
-                        <span class="icone">
-                            ${item.icone}
-                        </span>
-
-                        <div>
-
-                            <h3>
-                                ${item.nome}
-                            </h3>
-
-                            <p>
-                                ${item.descricao}
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    <button
-                        class="botao"
-                        onclick="finalizar(${item.id})"
-                        ${escolhido ? "disabled" : ""}
-                    >
-
-                        ${escolhido ? "✓ Escolhido" : "Finalizar"}
-
-                    </button>
-
-                `;
-
+            <div class="informacoes">
+              <span class="icone">${item.icone}</span>
+              <div>
+                <h3>${item.nome}</h3>
+                <p>${item.descricao}</p>
+              </div>
+            </div>
+            <button class="botao" onclick="finalizar(${item.id})" ${escolhido || !bancoPronto ? "disabled" : ""}>
+              ${escolhido ? "✓ Escolhido" : bancoPronto ? "Escolher presente" : "Conectando..."}
+            </button>
+          `;
           lista.appendChild(elemento);
         });
       }
 
-      function finalizar(id) {
-        if (escolhidos.includes(id)) {
-          return;
+      // Firebase compat é usado para manter o restante do site simples, sem build ou npm.
+      try {
+        if (
+          firebaseConfig.apiKey === "COLE_SUA_API_KEY" ||
+          firebaseConfig.databaseURL.includes("SEU-PROJETO")
+        ) {
+          throw new Error("Configure as credenciais do Firebase no código.");
+        }
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const escolhidosRef = db.ref("escolhidos");
+
+        // Atualização em tempo real: todos os visitantes recebem as mesmas marcações.
+        escolhidosRef.on(
+          "value",
+          (snapshot) => {
+            const dados = snapshot.val() || {};
+            escolhidos = Object.keys(dados)
+              .filter((id) => dados[id] === true)
+              .map(Number);
+            bancoPronto = true;
+            mostrarItens();
+          },
+          (erro) => {
+            console.error("Erro ao ler a lista:", erro);
+            document.getElementById("lista").innerHTML =
+              "<p style='color:white;text-align:center'>Não foi possível carregar a lista. Confira a configuração e as regras do Firebase.</p>";
+          },
+        );
+
+        async function marcarPresente(id) {
+          const ref = db.ref("escolhidos/" + id);
+          // A transação evita que duas pessoas reservem o mesmo item ao mesmo tempo.
+          const resultado = await ref.transaction((atual) => {
+            if (atual === true) return; // aborta se alguém já marcou
+            return true;
+          });
+          if (!resultado.committed) {
+            alert("Esse presente acabou de ser escolhido por outra pessoa.");
+          }
         }
 
-        escolhidos.push(id);
-
-        localStorage.setItem("chaPanela", JSON.stringify(escolhidos));
-
-        mostrarItens();
+        window.finalizar = async function (id) {
+          if (!bancoPronto || escolhidos.includes(id)) return;
+          try {
+            await marcarPresente(id);
+          } catch (erro) {
+            console.error("Erro ao marcar presente:", erro);
+            alert("Não foi possível marcar o presente. Tente novamente.");
+          }
+        };
+      } catch (erro) {
+        console.error(erro);
+        document.getElementById("lista").innerHTML =
+          "<p style='background:white;padding:16px;border-radius:12px'>Para ativar a lista compartilhada, falta configurar o Firebase neste arquivo. Veja as instruções enviadas junto com ele.</p>";
       }
 
       mostrarItens();
